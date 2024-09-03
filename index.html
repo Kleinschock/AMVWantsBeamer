@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMV Würzburg Beamer Donation</title>
+    <title>AMV Würzburg Beamer Spendenaktion</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
@@ -31,14 +31,15 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
-        h1 {
-            font-size: 3em;
+        h1, h2 {
             text-align: center;
             color: #fff;
             margin-bottom: 40px;
             text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff;
             animation: glow 2s ease-in-out infinite alternate;
         }
+        h1 { font-size: 3em; }
+        h2 { font-size: 2em; }
         @keyframes glow {
             from { text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff; }
             to { text-shadow: 0 0 20px #00aaff, 0 0 30px #00aaff, 0 0 40px #00aaff; }
@@ -85,36 +86,47 @@
         .progress {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #0077ff, #00aaff, #00ddff);
-            background-size: 200% 100%;
-            animation: gradientMove 5s ease infinite;
-        }
-        @keyframes gradientMove {
-            0% {background-position: 0% 50%;}
-            50% {background-position: 100% 50%;}
-            100% {background-position: 0% 50%;}
+            background: linear-gradient(90deg, #ff4500, #ffa500, #00ff00);
+            background-size: 300% 100%;
+            transition: width 2s ease-in-out;
         }
         .goal-amount {
             position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: -25px;
             color: #fff;
             font-weight: bold;
-            text-shadow: 0 0 5px #000;
         }
+        .goal-2500 { left: calc(2500 / 3600 * 100%); }
+        .goal-3000 { left: calc(3000 / 3600 * 100%); }
+        .goal-3600 { right: 0; }
         .beamer-icon {
             width: 100px;
             height: 100px;
             margin: 0 auto 20px;
             display: block;
         }
+        .reward-tiers {
+            background-color: rgba(0, 170, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 40px;
+        }
+        .reward-tier {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .reward-tier h3 {
+            color: #00aaff;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="container">
-        <h1>AMV Würzburg Beamer Donation Campaign</h1>
+        <h1>AMV Würzburg Beamer Spendenaktion</h1>
         <svg class="beamer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22 16V4C22 2.9 21.1 2 20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H20C21.1 18 22 17.1 22 16ZM20 16H4V4H20V16ZM16 20V22H8V20H16Z" fill="#00AAFF"/>
         </svg>
@@ -122,10 +134,27 @@
             <div class="donor-username">Dirk R.</div>
             <div class="donor-amount">100€</div>
         </div>
-        <div class="total-donation" id="totalDonation">Total Donations: 100€</div>
+        <div class="total-donation" id="totalDonation">Gesamtspenden: 100€</div>
         <div class="progress-bar">
             <div class="progress" id="progressBar"></div>
-            <div class="goal-amount" id="goalAmount">Goal: 3200€</div>
+            <div class="goal-amount goal-2500">2500€</div>
+            <div class="goal-amount goal-3000">3000€</div>
+            <div class="goal-amount goal-3600">3600€</div>
+        </div>
+        <div class="reward-tiers">
+            <h2>Beamer-Optionen</h2>
+            <div class="reward-tier">
+                <h3>2500€ - Grundmodell</h3>
+                <p>Ein solider Beamer für unsere Filmabende.</p>
+            </div>
+            <div class="reward-tier">
+                <h3>3000€ - Verbesserte Version</h3>
+                <p>Höhere Auflösung und bessere Farbwiedergabe.</p>
+            </div>
+            <div class="reward-tier">
+                <h3>3600€ - Profi-Modell</h3>
+                <p>Top-Qualität für das ultimative Kinoerlebnis!</p>
+            </div>
         </div>
     </div>
 
@@ -160,7 +189,7 @@
         window.onload = function() {
             const progressBar = document.getElementById('progressBar');
             const totalDonation = 100;
-            const goalAmount = 3200;
+            const goalAmount = 3600;
             const progress = (totalDonation / goalAmount) * 100;
             anime({
                 targets: progressBar,
