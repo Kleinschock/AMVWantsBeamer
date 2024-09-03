@@ -1,43 +1,360 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>My first three.js app</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMV Würzburg Beamer Donation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body, html {
             margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            height: 100%;
+            overflow-x: hidden;
+        }
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff;
+            }
+            to {
+                text-shadow: 0 0 20px #00aaff, 0 0 30px #00aaff, 0 0 40px #00aaff;
+            }
+        }
+        .top-donors {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+        }
+        .top-donor {
+            text-align: center;
+            background-color: rgba(0, 170, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        .top-donor:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 170, 255, 0.8);
+        }
+        .top-donor-username {
+            font-size: 1.4em;
+            color: #00aaff;
+            margin-bottom: 10px;
+        }
+        .top-donor-amount {
+            font-size: 1.6em;
+            color: #fff;
+            text-shadow: 0 0 5px #00aaff;
+        }
+        .donation-list {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .donation-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .donation-item:hover {
+            transform: translateY(0) scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.6);
+        }
+        .username {
+            font-weight: bold;
+            color: #00aaff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .amount {
+            color: #fff;
+            font-size: 1.4em;
+            font-weight: 700;
+            text-shadow: 0 0 5px #00aaff;
+        }
+        .total-donation {
+            text-align: center;
+            font-size: 2em;
+            margin-top: 40px;
+            color: #fff;
+            text-shadow: 0 0 10px #00aaff;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 20px;
+            position: relative;
+        }
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #0077ff, #00aaff, #00ddff);
+            background-size: 200% 100%;
+            animation: gradientMove 5s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        .goal-amount {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 5px #000;
+        }
+        .beamer-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+            display: block;
         }
     </style>
 </head>
-
 <body>
-    <script src="js/three.js"></script>
+    <div id="particles-js"></div>
+    <div class="container">
+        <h1>AMV Würzburg Beamer Donation Campaign</h1>
+        <svg class="beamer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 16V4C22 2.9 21.1 2 20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H20C21.1 18 22 17.1 22 16ZM20 16H4V4H20V16ZM16 20V22H8V20H16Z" fill="#00AAFF"/>
+        </svg>
+        <div class="top-donors" id="topDonors">
+            <!-- Top 3 donors will be added here dynamically -->
+        </div>
+        <ul class="donation-list" id="donationList">
+            <!-- Other donation items will be added here dynamically -->
+        </ul>
+        <div class="total-donation" id="totalDonation"></div>
+        <div class="progress-bar">
+            <div class="progress" id="progressBar"></div>
+            <div class="goal-amount" id="goalAmount"></div>
+        </div>
+    </div>
+
     <script>
+        // Particle.js configuration
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#00aaff"
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#00aaff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "repulse": {
+                        "distance": 100,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    }
+                }
+            },
+            "retina_detect": true
+        });
 
-        import * as THREE from 'three';
+        // Sample donation data (you can replace this with real data from a backend)
+        const donations = [
+            { username: "FraternityFan1", amount: 500 },
+            { username: "GenerousAlum2022", amount: 750 },
+            { username: "TechEnthusiast", amount: 1000 },
+            { username: "MovieNight4Ever", amount: 600 },
+            { username: "AMVSupporter123", amount: 850 },
+            { username: "BeamerLover", amount: 450 },
+            { username: "CinematicDreamer", amount: 550 },
+            { username: "ProjectorPro", amount: 700 }
+        ];
 
-        const scene = new THREE.Scene();
-        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+        // Sort donations by amount (descending order)
+        donations.sort((a, b) => b.amount - a.amount);
 
-        const controls = new OrbitControls(camera, renderer.domElement);
+        // Function to add top donors
+        function addTopDonors() {
+            const topDonorsElement = document.getElementById('topDonors');
+            const topThree = donations.slice(0, 3);
 
+            topThree.forEach((donation, index) => {
+                const donorElement = document.createElement('div');
+                donorElement.className = 'top-donor';
+                donorElement.innerHTML = `
+                    <div class="top-donor-username">${index + 1}. ${donation.username}</div>
+                    <div class="top-donor-amount">$${donation.amount.toLocaleString()}</div>
+                `;
+                topDonorsElement.appendChild(donorElement);
+            });
+        }
 
+        // Function to add other donation items
+        function addOtherDonations() {
+            const donationList = document.getElementById('donationList');
+            let totalDonation = 0;
+            donations.slice(3).forEach((donation, index) => {
+                const li = document.createElement('li');
+                li.className = 'donation-item';
+                li.innerHTML = `
+                    <span class="username">${donation.username}</span>
+                    <span class="amount">$${donation.amount.toLocaleString()}</span>
+                `;
+                donationList.appendChild(li);
+                totalDonation += donation.amount;
 
-    </script>
-    <script type="module">
+                // Animate each donation item
+                anime({
+                    targets: li,
+                    opacity: 1,
+                    translateY: 0,
+                    delay: index * 100,
+                    duration: 1000,
+                    easing: 'easeOutElastic(1, .8)'
+                });
+            });
 
-        // Find the latest version by visiting https://cdn.skypack.dev/three.
+            // Add top 3 donations to total
+            totalDonation += donations.slice(0, 3).reduce((sum, donation) => sum + donation.amount, 0);
 
-        import * as THREE from 'https://cdn.skypack.dev/three@<version>';
+            // Update total donation amount with counting animation
+            const totalDonationElement = document.getElementById('totalDonation');
+            anime({
+                targets: totalDonationElement,
+                innerHTML: [0, totalDonation],
+                round: 1,
+                easing: 'easeInOutExpo',
+                duration: 2000,
+                update: function(a) {
+                    totalDonationElement.innerHTML = `Total Donations: $${a.animations[0].currentValue.toLocaleString()}`;
+                }
+            });
 
-        const scene = new THREE.Scene();
+            // Update progress bar
+            const progressBar = document.getElementById('progressBar');
+            const goalAmount = 5000; // Set your goal amount here
+            const progress = (totalDonation / goalAmount) * 100;
+            anime({
+                targets: progressBar,
+                width: `${Math.min(progress, 100)}%`,
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            });
 
-        import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+            // Update goal amount
+            const goalAmountElement = document.getElementById('goalAmount');
+            goalAmountElement.textContent = `Goal: $${goalAmount.toLocaleString()}`;
+        }
 
-        const controls = new OrbitControls(camera, renderer.domElement);
-
+        // Call the functions to add donors and donations
+        window.onload = function() {
+            addTopDonors();
+            addOtherDonations();
+        };
     </script>
 </body>
-
 </html>
