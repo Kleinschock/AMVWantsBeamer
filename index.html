@@ -130,11 +130,19 @@
         <svg class="beamer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22 16V4C22 2.9 21.1 2 20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H20C21.1 18 22 17.1 22 16ZM20 16H4V4H20V16ZM16 20V22H8V20H16Z" fill="#00AAFF"/>
         </svg>
-        <div class="donor" id="donor">
+        <div class="donor">
             <div class="donor-username">Dirk R.</div>
             <div class="donor-amount">100€</div>
         </div>
-        <div class="total-donation" id="totalDonation">Gesamtspenden: 100€</div>
+        <div class="donor">
+            <div class="donor-username">Ulrich S.</div>
+            <div class="donor-amount">80€</div>
+        </div>
+        <div class="donor">
+            <div class="donor-username">Wolfgang B.</div>
+            <div class="donor-amount">20€</div>
+        </div>
+        <div class="total-donation" id="totalDonation">Gesamtspenden: 200€</div>
         <div class="progress-bar">
             <div class="progress" id="progressBar"></div>
             <div class="goal-amount goal-2500">2500€</div>
@@ -188,7 +196,7 @@
         // Update progress bar
         window.onload = function() {
             const progressBar = document.getElementById('progressBar');
-            const totalDonation = 100;
+            const totalDonation = 200;
             const goalAmount = 3600;
             const progress = (totalDonation / goalAmount) * 100;
             anime({
