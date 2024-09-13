@@ -20,6 +20,7 @@
             color: #fff;
             height: 100%;
             overflow-x: hidden;
+            position: relative;
         }
         #particles-js {
             position: fixed;
@@ -32,6 +33,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
+            z-index: 1;
         }
         h1, h2, h3 {
             text-align: center;
@@ -116,6 +118,12 @@
             background: linear-gradient(90deg, #ff4500, #ffa500, #00ff00);
             background-size: 300% 100%;
             transition: width 2s ease-in-out;
+            box-shadow: 0 0 10px #ffa500;
+            animation: progressAnimation 2s forwards;
+        }
+        @keyframes progressAnimation {
+            from { width: 0%; }
+            to { width: var(--progress-width); }
         }
         .goal-markers {
             position: absolute;
@@ -246,6 +254,50 @@
             background-color: #0088cc;
             transform: scale(1.05);
         }
+        /* Floating Shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -2;
+        }
+        .shape {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+        }
+        .shape:nth-child(1) { top: 10%; left: 20%; animation-duration: 15s; }
+        .shape:nth-child(2) { top: 30%; left: 80%; animation-duration: 20s; }
+        .shape:nth-child(3) { top: 60%; left: 10%; animation-duration: 25s; }
+        .shape:nth-child(4) { top: 80%; left: 70%; animation-duration: 18s; }
+        .shape:nth-child(5) { top: 50%; left: 50%; animation-duration: 22s; }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+            50% { transform: translateY(-100px) rotate(180deg); opacity: 0.8; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 0.5; }
+        }
+        /* Animated Gradient Background */
+        .animated-gradient {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: linear-gradient(45deg, #0d0d0d, #1a1a1a, #0d0d0d);
+            animation: gradientMove 20s linear infinite;
+            z-index: -3;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         /* Responsive Design */
         @media (max-width: 768px) {
             .donors {
@@ -255,15 +307,32 @@
             .progress-bar {
                 width: 90%;
             }
+            .shape {
+                width: 30px;
+                height: 30px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Animated Gradient Background -->
+    <div class="animated-gradient"></div>
+    <!-- Floating Shapes -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <!-- Particle Background -->
     <div id="particles-js"></div>
     <div class="container">
         <h1>AMV Würzburg Beamer Spendenaktion</h1>
         <!-- Beamer Icon -->
-        <img src="beamer_icon.png" alt="Beamer Icon" class="beamer-icon">
+        <svg class="beamer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 16V4C22 2.9 21.1 2 20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H20C21.1 18 22 17.1 22 16ZM20 16H4V4H20V16ZM16 20V22H8V20H16Z" fill="#00AAFF"/>
+        </svg>
         <!-- Donor List -->
         <div class="donors">
             <div class="donor top-donor">
@@ -301,7 +370,7 @@
         <div class="progress-section">
             <h2 id="totalDonation">Gesamtspenden: €1,250</h2>
             <div class="progress-bar">
-                <div class="progress" id="progressBar"></div>
+                <div class="progress" id="progressBar" style="--progress-width: 34.72%;"></div>
                 <div class="goal-markers">
                     <div class="goal-marker">€2,500</div>
                     <div class="goal-marker">€3,000</div>
@@ -351,54 +420,104 @@
     </div>
     <!-- Scripts -->
     <script>
-        // Particle.js configuration
+        // Particle.js configuration with multiple layers
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#00aaff" },
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": ["#00aaff", "#ffdd00", "#ff4500"]
+                },
                 "shape": {
-                    "type": "circle",
-                    "stroke": { "width": 0, "color": "#000000" },
-                    "polygon": { "nb_sides": 5 }
+                    "type": ["circle", "triangle"],
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
                 },
                 "opacity": {
-                    "value": 0.5,
+                    "value": 0.7,
                     "random": true,
-                    "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false }
+                    "anim": {
+                        "enable": true,
+                        "speed": 0.5,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
                 },
                 "size": {
-                    "value": 3,
+                    "value": 4,
                     "random": true,
-                    "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false }
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
                 },
                 "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#00aaff",
-                    "opacity": 0.4,
-                    "width": 1
+                    "enable": false
                 },
                 "move": {
                     "enable": true,
-                    "speed": 2,
+                    "speed": 1.5,
                     "direction": "none",
                     "random": true,
                     "straight": false,
                     "out_mode": "out",
                     "bounce": false,
-                    "attract": { "enable": true, "rotateX": 600, "rotateY": 1200 }
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
                 }
             },
             "interactivity": {
                 "detect_on": "canvas",
                 "events": {
-                    "onhover": { "enable": true, "mode": "repulse" },
-                    "onclick": { "enable": true, "mode": "push" },
+                    "onhover": {
+                        "enable": true,
+                        "mode": "bubble"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
                     "resize": true
                 },
                 "modes": {
-                    "repulse": { "distance": 100, "duration": 0.4 },
-                    "push": { "particles_nb": 4 }
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 200,
+                        "size": 8,
+                        "duration": 2,
+                        "opacity": 0.8,
+                        "speed": 3
+                    },
+                    "repulse": {
+                        "distance": 100,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
                 }
             },
             "retina_detect": true
@@ -410,7 +529,7 @@
             const totalDonation = 1250; // Existing donations
             const goalAmount = 3600;
             const progress = (totalDonation / goalAmount) * 100;
-            progressBar.style.width = progress + '%';
+            document.documentElement.style.setProperty('--progress-width', progress + '%');
 
             // Animate progress bar using Anime.js
             anime({
@@ -423,7 +542,33 @@
 
         // Function to show more information (e.g., modal or alert)
         function showMoreInfo() {
-            alert("Vielen Dank für dein Interesse! Kontaktiere uns unter spenden@amv-wuerzburg.de für weitere Informationen zur Parodie-Filmplakat-Aktion.");
+            // Create a modal dynamically
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+            modal.innerHTML = `
+                <div style="background-color: #1a1a1a; padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; position: relative;">
+                    <span onclick="closeModal()" style="position: absolute; top: 10px; right: 15px; font-size: 1.5em; cursor: pointer;">&times;</span>
+                    <h2>Weitere Informationen</h2>
+                    <p>Vielen Dank für dein Interesse! Kontaktiere uns unter <a href="mailto:spenden@amv-wuerzburg.de" style="color: #00aaff;">spenden@amv-wuerzburg.de</a> für weitere Informationen zur Parodie-Filmplakat-Aktion.</p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function closeModal() {
+            const modal = document.querySelector('div[style*="position: fixed"]');
+            if (modal) {
+                modal.remove();
+            }
         }
     </script>
 </body>
