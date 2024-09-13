@@ -7,7 +7,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <!-- Countdown Timer -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@1.28.0/build/global/luxon.min.js"></script>
     <style>
         /* General Styles */
         body, html {
@@ -56,14 +58,28 @@
             border-radius: 10px;
             width: 280px;
             text-align: center;
-            transition: transform 0.3s;
+            perspective: 1000px;
         }
-        .donor:hover {
-            transform: scale(1.05);
+        .donor-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
         }
-        .donor.top-donor {
-            border: 2px solid gold;
-            box-shadow: 0 0 15px gold;
+        .donor:hover .donor-inner {
+            transform: rotateY(180deg);
+        }
+        .donor-front, .donor-back {
+            position: absolute;
+            width: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .donor-back {
+            background-color: rgba(0, 170, 255, 0.2);
+            transform: rotateY(180deg);
         }
         .donor-username {
             font-size: 1.5em;
@@ -94,6 +110,18 @@
             background: linear-gradient(90deg, red, yellow, green);
             background-size: 300% 100%;
             transition: width 2s ease-in-out;
+            position: relative;
+        }
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: -35px;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            background: url('beamer_icon.png') no-repeat center center;
+            background-size: contain;
+            transform: translateX(50%);
         }
         .goal-markers {
             position: absolute;
@@ -153,48 +181,89 @@
             color: #00aaff;
             margin-bottom: 10px;
         }
+        /* Incentive Section */
+        .incentive {
+            background-color: rgba(255, 165, 0, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 40px;
+            animation: pulse 2s infinite;
+        }
+        .incentive h2 {
+            color: #ffa500;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ffa500;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px #ffa500; }
+            50% { box-shadow: 0 0 20px #ffa500; }
+            100% { box-shadow: 0 0 10px #ffa500; }
+        }
+        /* Countdown Timer */
+        .countdown {
+            font-size: 2em;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="container">
         <h1>AMV Würzburg Beamer Spendenaktion</h1>
+        <!-- Countdown Timer -->
+        <div class="countdown" id="countdown">Spendenaktion endet in: <span id="time"></span></div>
         <!-- Beamer Icon -->
         <img src="beamer_icon.png" alt="Beamer Icon" class="beamer-icon">
         <!-- Donor List -->
         <div class="donors">
-            <div class="donor top-donor">
-                <div class="donor-username">1. Dirk R.</div>
-                <div class="donor-amount">€500</div>
-            </div>
-            <div class="donor top-donor">
-                <div class="donor-username">2. Ulrich S.</div>
-                <div class="donor-amount">€300</div>
-            </div>
-            <div class="donor top-donor">
-                <div class="donor-username">3. Wolfgang B.</div>
-                <div class="donor-amount">€200</div>
-            </div>
-            <!-- Additional Donors -->
+            <!-- Donor 1 -->
             <div class="donor">
-                <div class="donor-username">Anna M.</div>
-                <div class="donor-amount">€150</div>
+                <div class="donor-inner">
+                    <div class="donor-front">
+                        <div class="donor-username">Dirk R.</div>
+                        <div class="donor-amount">€100</div>
+                    </div>
+                    <div class="donor-back">
+                        <p>Danke für deine großzügige Spende, Dirk!</p>
+                    </div>
+                </div>
             </div>
+            <!-- Donor 2 -->
             <div class="donor">
-                <div class="donor-username">Max T.</div>
-                <div class="donor-amount">€100</div>
+                <div class="donor-inner">
+                    <div class="donor-front">
+                        <div class="donor-username">Ulrich S.</div>
+                        <div class="donor-amount">€80</div>
+                    </div>
+                    <div class="donor-back">
+                        <p>Vielen Dank, Ulrich, für deine Unterstützung!</p>
+                    </div>
+                </div>
             </div>
-            <!-- ...more donors -->
+            <!-- Donor 3 -->
+            <div class="donor">
+                <div class="donor-inner">
+                    <div class="donor-front">
+                        <div class="donor-username">Wolfgang B.</div>
+                        <div class="donor-amount">€20</div>
+                    </div>
+                    <div class="donor-back">
+                        <p>Danke, Wolfgang, für deine Spende!</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Additional Donors can be added here -->
         </div>
         <!-- Total Donation and Progress Bar -->
         <div class="progress-section">
-            <h2 id="totalDonation">Gesamtspenden: €1,250</h2>
+            <h2 id="totalDonation">Gesamtspenden: €200</h2>
             <div class="progress-bar">
                 <div class="progress" id="progressBar"></div>
                 <div class="goal-markers">
-                    <div class="goal-marker">€2,500</div>
-                    <div class="goal-marker" style="left: 50%;">€3,000</div>
-                    <div class="goal-marker">€3,600</div>
+                    <div class="goal-marker" style="left: calc(2500 / 3600 * 100%);">€2,500</div>
+                    <div class="goal-marker" style="left: calc(3000 / 3600 * 100%);">€3,000</div>
+                    <div class="goal-marker" style="left: 100%;">€3,600</div>
                 </div>
             </div>
         </div>
@@ -218,17 +287,24 @@
         <div class="donor-benefits">
             <h2>Vorteile für Spender</h2>
             <div class="benefit">
+                <h3>Spenden ab €20</h3>
+                <p>Namentliche Erwähnung auf unserer Spenderliste.</p>
+            </div>
+            <div class="benefit">
+                <h3>Spenden ab €50</h3>
+                <p>Exklusive Einladung zu unserer Beamer-Einweihungsparty.</p>
+            </div>
+            <div class="benefit">
                 <h3>Spenden ab €100</h3>
-                <p>Namentliche Erwähnung auf unserer Ehrentafel.</p>
+                <p>Personalisierte Dankeskarte und Überraschungsgeschenk.</p>
             </div>
-            <div class="benefit">
-                <h3>Spenden ab €300</h3>
-                <p>Einladung zu einer exklusiven Vorführung.</p>
-            </div>
-            <div class="benefit">
-                <h3>Spenden ab €500</h3>
-                <p>Persönliches Dankeschön und VIP-Status bei Veranstaltungen.</p>
-            </div>
+        </div>
+        <!-- Incentive Section -->
+        <div class="incentive">
+            <h2>Sonderaktion für Großspender!</h2>
+            <p>Als kleines Dankeschön für besonders großzügige Spenden haben wir uns etwas Besonderes ausgedacht:</p>
+            <p>Der höchste Spender darf uns seinen Lieblingsfilm oder -plakat nennen. Wir erstellen daraus ein einzigartiges Parodie-Filmplakat, auf dem unsere Top-5-Spender als Charaktere auftreten! Dieses besondere Plakat wird einen Ehrenplatz in unserem Kino erhalten. Jeder Spender wird darauf mit Namen erwähnt.</p>
+            <p>So möchten wir uns herzlich bei euch bedanken und gemeinsam etwas Einzigartiges schaffen. Wir freuen uns auf eure Ideen und eure Unterstützung!</p>
         </div>
     </div>
     <!-- Scripts -->
@@ -239,9 +315,13 @@
                 "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#00aaff" },
                 "shape": {
-                    "type": "circle",
+                    "type": ["circle", "image"],
                     "stroke": { "width": 0, "color": "#000000" },
-                    "polygon": { "nb_sides": 5 }
+                    "image": {
+                        "src": "beamer_icon_small.png",
+                        "width": 100,
+                        "height": 100
+                    }
                 },
                 "opacity": {
                     "value": 0.5,
@@ -288,10 +368,20 @@
         // Update progress bar
         window.onload = function() {
             const progressBar = document.getElementById('progressBar');
-            const totalDonation = 1250;
+            const totalDonation = 200;
             const goalAmount = 3600;
             const progress = (totalDonation / goalAmount) * 100;
             progressBar.style.width = progress + '%';
+
+            // Countdown Timer
+            const endDate = luxon.DateTime.local().plus({ days: 30 });
+            const countdownElement = document.getElementById('time');
+
+            setInterval(() => {
+                const now = luxon.DateTime.local();
+                const diff = endDate.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
+                countdownElement.textContent = `${Math.floor(diff.days)} Tage, ${Math.floor(diff.hours)} Std, ${Math.floor(diff.minutes)} Min, ${Math.floor(diff.seconds)} Sek`;
+            }, 1000);
         };
     </script>
 </body>
