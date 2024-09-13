@@ -7,9 +7,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-    <!-- Countdown Timer -->
-    <script src="https://cdn.jsdelivr.net/npm/luxon@1.28.0/build/global/luxon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* General Styles */
         body, html {
@@ -29,18 +29,19 @@
         }
         .container {
             position: relative;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
         }
-        h1, h2 {
+        h1, h2, h3 {
             text-align: center;
             margin-bottom: 40px;
             text-shadow: 0 0 10px #00aaff;
             animation: glow 2s ease-in-out infinite alternate;
         }
-        h1 { font-size: 3em; }
-        h2 { font-size: 2em; }
+        h1 { font-size: 3.5em; }
+        h2 { font-size: 2.5em; }
+        h3 { font-size: 2em; }
         @keyframes glow {
             from { text-shadow: 0 0 10px #00aaff; }
             to { text-shadow: 0 0 20px #00aaff; }
@@ -50,82 +51,75 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            gap: 20px;
         }
         .donor {
             background-color: rgba(0, 170, 255, 0.1);
             padding: 20px;
             margin: 10px;
             border-radius: 10px;
-            width: 280px;
+            width: 250px;
             text-align: center;
-            perspective: 1000px;
-        }
-        .donor-inner {
+            transition: transform 0.3s, background-color 0.3s;
             position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
+            overflow: hidden;
         }
-        .donor:hover .donor-inner {
-            transform: rotateY(180deg);
-        }
-        .donor-front, .donor-back {
-            position: absolute;
-            width: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        .donor-back {
+        .donor:hover {
+            transform: scale(1.05);
             background-color: rgba(0, 170, 255, 0.2);
-            transform: rotateY(180deg);
+        }
+        .donor.top-donor {
+            border: 3px solid gold;
+            box-shadow: 0 0 20px gold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px gold; }
+            50% { box-shadow: 0 0 30px gold; }
+            100% { box-shadow: 0 0 20px gold; }
         }
         .donor-username {
             font-size: 1.5em;
             color: #00aaff;
             margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        .donor-username:hover {
+            color: #ffdd00;
         }
         .donor-amount {
             font-size: 2em;
             color: #fff;
             text-shadow: 0 0 5px #00aaff;
+            transition: transform 0.3s;
+        }
+        .donor:hover .donor-amount {
+            transform: translateY(-10px);
         }
         /* Progress Bar */
         .progress-section {
-            margin: 40px 0;
+            margin: 60px 0;
             text-align: center;
         }
         .progress-bar {
             position: relative;
-            width: 100%;
+            width: 80%;
             height: 30px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             overflow: hidden;
+            margin: 0 auto;
         }
         .progress {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, red, yellow, green);
+            background: linear-gradient(90deg, #ff4500, #ffa500, #00ff00);
             background-size: 300% 100%;
             transition: width 2s ease-in-out;
-            position: relative;
-        }
-        .progress::after {
-            content: '';
-            position: absolute;
-            top: -35px;
-            right: 0;
-            width: 50px;
-            height: 50px;
-            background: url('beamer_icon.png') no-repeat center center;
-            background-size: contain;
-            transform: translateX(50%);
         }
         .goal-markers {
             position: absolute;
-            top: -25px;
+            top: -35px;
             width: 100%;
             display: flex;
             justify-content: space-between;
@@ -134,11 +128,12 @@
             position: relative;
             color: #fff;
             font-weight: bold;
+            font-size: 1em;
         }
         .goal-marker::after {
             content: '';
             position: absolute;
-            top: 25px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: 2px;
@@ -147,63 +142,119 @@
         }
         /* Beamer Icon */
         .beamer-icon {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             margin: 0 auto 20px;
             display: block;
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
         /* Reward Tiers */
         .reward-tiers {
             background-color: rgba(0, 170, 255, 0.1);
-            padding: 20px;
+            padding: 30px;
             border-radius: 15px;
-            margin-top: 40px;
+            margin-top: 60px;
+            transition: background-color 0.3s;
+        }
+        .reward-tiers:hover {
+            background-color: rgba(0, 170, 255, 0.15);
         }
         .reward-tier {
             margin-bottom: 20px;
-            padding: 10px;
+            padding: 15px;
             border-radius: 10px;
             background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .reward-tier:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
         }
         .reward-tier h3 {
             color: #00aaff;
             margin-bottom: 10px;
         }
+        .reward-tier p {
+            color: #ddd;
+        }
         /* Donor Benefits */
         .donor-benefits {
-            margin-top: 40px;
+            margin-top: 60px;
             text-align: center;
         }
         .benefit {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(0, 170, 255, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .benefit:hover {
+            background-color: rgba(0, 170, 255, 0.2);
+            transform: scale(1.02);
         }
         .benefit h3 {
             color: #00aaff;
             margin-bottom: 10px;
         }
-        /* Incentive Section */
-        .incentive {
-            background-color: rgba(255, 165, 0, 0.1);
-            padding: 20px;
+        .benefit p {
+            color: #ddd;
+        }
+        /* Parody Poster Section */
+        .parody-poster {
+            margin-top: 60px;
+            padding: 30px;
+            background-color: rgba(255, 215, 0, 0.1);
             border-radius: 15px;
-            margin-top: 40px;
-            animation: pulse 2s infinite;
-        }
-        .incentive h2 {
-            color: #ffa500;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #ffa500;
-        }
-        @keyframes pulse {
-            0% { box-shadow: 0 0 10px #ffa500; }
-            50% { box-shadow: 0 0 20px #ffa500; }
-            100% { box-shadow: 0 0 10px #ffa500; }
-        }
-        /* Countdown Timer */
-        .countdown {
-            font-size: 2em;
             text-align: center;
+            transition: background-color 0.3s;
+        }
+        .parody-poster:hover {
+            background-color: rgba(255, 215, 0, 0.15);
+        }
+        .parody-poster h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        .parody-poster p {
+            color: #eee;
+            font-size: 1.1em;
+        }
+        .parody-poster .fa-film {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        /* Interactive Elements */
+        .interactive-button {
+            display: inline-block;
+            padding: 10px 20px;
             margin-top: 20px;
+            background-color: #00aaff;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1em;
+        }
+        .interactive-button:hover {
+            background-color: #0088cc;
+            transform: scale(1.05);
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .donors {
+                flex-direction: column;
+                align-items: center;
+            }
+            .progress-bar {
+                width: 90%;
+            }
         }
     </style>
 </head>
@@ -211,59 +262,50 @@
     <div id="particles-js"></div>
     <div class="container">
         <h1>AMV Würzburg Beamer Spendenaktion</h1>
-        <!-- Countdown Timer -->
-        <div class="countdown" id="countdown">Spendenaktion endet in: <span id="time"></span></div>
         <!-- Beamer Icon -->
         <img src="beamer_icon.png" alt="Beamer Icon" class="beamer-icon">
         <!-- Donor List -->
         <div class="donors">
-            <!-- Donor 1 -->
-            <div class="donor">
-                <div class="donor-inner">
-                    <div class="donor-front">
-                        <div class="donor-username">Dirk R.</div>
-                        <div class="donor-amount">€100</div>
-                    </div>
-                    <div class="donor-back">
-                        <p>Danke für deine großzügige Spende, Dirk!</p>
-                    </div>
-                </div>
+            <div class="donor top-donor">
+                <div class="donor-username">1. Dirk R.</div>
+                <div class="donor-amount">€500</div>
             </div>
-            <!-- Donor 2 -->
-            <div class="donor">
-                <div class="donor-inner">
-                    <div class="donor-front">
-                        <div class="donor-username">Ulrich S.</div>
-                        <div class="donor-amount">€80</div>
-                    </div>
-                    <div class="donor-back">
-                        <p>Vielen Dank, Ulrich, für deine Unterstützung!</p>
-                    </div>
-                </div>
+            <div class="donor top-donor">
+                <div class="donor-username">2. Ulrich S.</div>
+                <div class="donor-amount">€300</div>
             </div>
-            <!-- Donor 3 -->
-            <div class="donor">
-                <div class="donor-inner">
-                    <div class="donor-front">
-                        <div class="donor-username">Wolfgang B.</div>
-                        <div class="donor-amount">€20</div>
-                    </div>
-                    <div class="donor-back">
-                        <p>Danke, Wolfgang, für deine Spende!</p>
-                    </div>
-                </div>
+            <div class="donor top-donor">
+                <div class="donor-username">3. Wolfgang B.</div>
+                <div class="donor-amount">€200</div>
             </div>
-            <!-- Additional Donors can be added here -->
+            <!-- Additional Donors -->
+            <div class="donor">
+                <div class="donor-username">Anna M.</div>
+                <div class="donor-amount">€150</div>
+            </div>
+            <div class="donor">
+                <div class="donor-username">Max T.</div>
+                <div class="donor-amount">€100</div>
+            </div>
+            <div class="donor">
+                <div class="donor-username">Lisa K.</div>
+                <div class="donor-amount">€200</div>
+            </div>
+            <div class="donor">
+                <div class="donor-username">Paul H.</div>
+                <div class="donor-amount">€100</div>
+            </div>
+            <!-- ...more donors -->
         </div>
         <!-- Total Donation and Progress Bar -->
         <div class="progress-section">
-            <h2 id="totalDonation">Gesamtspenden: €200</h2>
+            <h2 id="totalDonation">Gesamtspenden: €1,250</h2>
             <div class="progress-bar">
                 <div class="progress" id="progressBar"></div>
                 <div class="goal-markers">
-                    <div class="goal-marker" style="left: calc(2500 / 3600 * 100%);">€2,500</div>
-                    <div class="goal-marker" style="left: calc(3000 / 3600 * 100%);">€3,000</div>
-                    <div class="goal-marker" style="left: 100%;">€3,600</div>
+                    <div class="goal-marker">€2,500</div>
+                    <div class="goal-marker">€3,000</div>
+                    <div class="goal-marker">€3,600</div>
                 </div>
             </div>
         </div>
@@ -287,24 +329,24 @@
         <div class="donor-benefits">
             <h2>Vorteile für Spender</h2>
             <div class="benefit">
-                <h3>Spenden ab €20</h3>
-                <p>Namentliche Erwähnung auf unserer Spenderliste.</p>
-            </div>
-            <div class="benefit">
-                <h3>Spenden ab €50</h3>
-                <p>Exklusive Einladung zu unserer Beamer-Einweihungsparty.</p>
-            </div>
-            <div class="benefit">
                 <h3>Spenden ab €100</h3>
-                <p>Personalisierte Dankeskarte und Überraschungsgeschenk.</p>
+                <p>Namentliche Erwähnung auf unserer Ehrentafel.</p>
+            </div>
+            <div class="benefit">
+                <h3>Spenden ab €300</h3>
+                <p>Einladung zu einer exklusiven Vorführung.</p>
+            </div>
+            <div class="benefit">
+                <h3>Spenden ab €500</h3>
+                <p>Persönliches Dankeschön und VIP-Status bei Veranstaltungen.</p>
             </div>
         </div>
-        <!-- Incentive Section -->
-        <div class="incentive">
-            <h2>Sonderaktion für Großspender!</h2>
-            <p>Als kleines Dankeschön für besonders großzügige Spenden haben wir uns etwas Besonderes ausgedacht:</p>
-            <p>Der höchste Spender darf uns seinen Lieblingsfilm oder -plakat nennen. Wir erstellen daraus ein einzigartiges Parodie-Filmplakat, auf dem unsere Top-5-Spender als Charaktere auftreten! Dieses besondere Plakat wird einen Ehrenplatz in unserem Kino erhalten. Jeder Spender wird darauf mit Namen erwähnt.</p>
-            <p>So möchten wir uns herzlich bei euch bedanken und gemeinsam etwas Einzigartiges schaffen. Wir freuen uns auf eure Ideen und eure Unterstützung!</p>
+        <!-- Parody Poster Incentive -->
+        <div class="parody-poster">
+            <i class="fas fa-film"></i>
+            <h2>Exklusive Parodie-Filmplakate für Top-Spender!</h2>
+            <p>Als kleinen Anreiz für eure großzügigen Spenden haben wir eine besondere Idee: Für diejenigen, die eine größere Summe spenden, entwerfen wir ein einzigartiges Parodie-Filmplakat. Der Höchstspendende darf uns seinen Lieblingsfilm oder sein Lieblingsplakat zusenden, und wir verwandeln es in ein neues Parodie-Plakat. Auf diesem Plakat werden die ursprünglichen Charaktere durch unsere Top-5 Spender ersetzt, sodass sie als Teil des Films erscheinen. Jeder Spender wird namentlich erwähnt. Dieses stimmige Bundesbruder-Parodie-Bild wird dann prominent ins Kino oder ans Kino angebracht. So möchten wir euch für eure Unterstützung danken. Solltet ihr weitere kreative Ideen haben, sind wir offen dafür, solange das Bild positiv bleibt und unsere Gemeinschaft stärkt.</p>
+            <button class="interactive-button" onclick="showMoreInfo()">Mehr erfahren</button>
         </div>
     </div>
     <!-- Scripts -->
@@ -315,13 +357,9 @@
                 "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#00aaff" },
                 "shape": {
-                    "type": ["circle", "image"],
+                    "type": "circle",
                     "stroke": { "width": 0, "color": "#000000" },
-                    "image": {
-                        "src": "beamer_icon_small.png",
-                        "width": 100,
-                        "height": 100
-                    }
+                    "polygon": { "nb_sides": 5 }
                 },
                 "opacity": {
                     "value": 0.5,
@@ -352,6 +390,7 @@
                 }
             },
             "interactivity": {
+                "detect_on": "canvas",
                 "events": {
                     "onhover": { "enable": true, "mode": "repulse" },
                     "onclick": { "enable": true, "mode": "push" },
@@ -365,24 +404,27 @@
             "retina_detect": true
         });
 
-        // Update progress bar
+        // Update progress bar and total donation
         window.onload = function() {
             const progressBar = document.getElementById('progressBar');
-            const totalDonation = 200;
+            const totalDonation = 1250; // Existing donations
             const goalAmount = 3600;
             const progress = (totalDonation / goalAmount) * 100;
             progressBar.style.width = progress + '%';
 
-            // Countdown Timer
-            const endDate = luxon.DateTime.local().plus({ days: 30 });
-            const countdownElement = document.getElementById('time');
-
-            setInterval(() => {
-                const now = luxon.DateTime.local();
-                const diff = endDate.diff(now, ['days', 'hours', 'minutes', 'seconds']).toObject();
-                countdownElement.textContent = `${Math.floor(diff.days)} Tage, ${Math.floor(diff.hours)} Std, ${Math.floor(diff.minutes)} Min, ${Math.floor(diff.seconds)} Sek`;
-            }, 1000);
+            // Animate progress bar using Anime.js
+            anime({
+                targets: progressBar,
+                width: `${Math.min(progress, 100)}%`,
+                duration: 2000,
+                easing: 'easeInOutQuart'
+            });
         };
+
+        // Function to show more information (e.g., modal or alert)
+        function showMoreInfo() {
+            alert("Vielen Dank für dein Interesse! Kontaktiere uns unter spenden@amv-wuerzburg.de für weitere Informationen zur Parodie-Filmplakat-Aktion.");
+        }
     </script>
 </body>
 </html>
