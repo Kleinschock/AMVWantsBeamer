@@ -2,18 +2,19 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AMV Würzburg Beamer Spendenaktion</title>
+    <!-- Particle.js and Anime.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
+        /* General Styles */
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Roboto', sans-serif;
-            background-color: #1a1a1a;
+            background-color: #0d0d0d;
             color: #fff;
             height: 100%;
             overflow-x: hidden;
@@ -22,89 +23,108 @@
             position: fixed;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: -1;
         }
         .container {
             position: relative;
-            z-index: 2;
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
         }
         h1, h2 {
             text-align: center;
-            color: #fff;
             margin-bottom: 40px;
-            text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff;
+            text-shadow: 0 0 10px #00aaff;
             animation: glow 2s ease-in-out infinite alternate;
         }
         h1 { font-size: 3em; }
         h2 { font-size: 2em; }
         @keyframes glow {
-            from { text-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 30px #00aaff; }
-            to { text-shadow: 0 0 20px #00aaff, 0 0 30px #00aaff, 0 0 40px #00aaff; }
+            from { text-shadow: 0 0 10px #00aaff; }
+            to { text-shadow: 0 0 20px #00aaff; }
+        }
+        /* Donor Section */
+        .donors {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .donor {
+            background-color: rgba(0, 170, 255, 0.1);
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 280px;
             text-align: center;
-            background-color: rgba(0, 170, 255, 0.2);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
-            transition: all 0.3s ease;
-            margin-bottom: 40px;
+            transition: transform 0.3s;
         }
         .donor:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(0, 170, 255, 0.8);
+        }
+        .donor.top-donor {
+            border: 2px solid gold;
+            box-shadow: 0 0 15px gold;
         }
         .donor-username {
-            font-size: 2em;
+            font-size: 1.5em;
             color: #00aaff;
             margin-bottom: 10px;
         }
         .donor-amount {
-            font-size: 2.5em;
+            font-size: 2em;
             color: #fff;
             text-shadow: 0 0 5px #00aaff;
         }
-        .total-donation {
-            text-align: center;
-            font-size: 2em;
+        /* Progress Bar */
+        .progress-section {
             margin: 40px 0;
-            color: #fff;
-            text-shadow: 0 0 10px #00aaff;
+            text-align: center;
         }
         .progress-bar {
+            position: relative;
             width: 100%;
             height: 30px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             overflow: hidden;
-            margin-top: 20px;
-            position: relative;
         }
         .progress {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #ff4500, #ffa500, #00ff00);
+            background: linear-gradient(90deg, red, yellow, green);
             background-size: 300% 100%;
             transition: width 2s ease-in-out;
         }
-        .goal-amount {
+        .goal-markers {
             position: absolute;
             top: -25px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .goal-marker {
+            position: relative;
             color: #fff;
             font-weight: bold;
         }
-        .goal-2500 { left: calc(2500 / 3600 * 100%); }
-        .goal-3000 { left: calc(3000 / 3600 * 100%); }
-        .goal-3600 { right: 0; }
+        .goal-marker::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 10px;
+            background-color: #fff;
+        }
+        /* Beamer Icon */
         .beamer-icon {
             width: 100px;
             height: 100px;
             margin: 0 auto 20px;
             display: block;
         }
+        /* Reward Tiers */
         .reward-tiers {
             background-color: rgba(0, 170, 255, 0.1);
             padding: 20px;
@@ -121,65 +141,137 @@
             color: #00aaff;
             margin-bottom: 10px;
         }
+        /* Donor Benefits */
+        .donor-benefits {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .benefit {
+            margin-bottom: 20px;
+        }
+        .benefit h3 {
+            color: #00aaff;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
     <div class="container">
         <h1>AMV Würzburg Beamer Spendenaktion</h1>
-        <svg class="beamer-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 16V4C22 2.9 21.1 2 20 2H4C2.9 2 2 2.9 2 4V16C2 17.1 2.9 18 4 18H20C21.1 18 22 17.1 22 16ZM20 16H4V4H20V16ZM16 20V22H8V20H16Z" fill="#00AAFF"/>
-        </svg>
-        <div class="donor">
-            <div class="donor-username">Dirk R.</div>
-            <div class="donor-amount">100€</div>
+        <!-- Beamer Icon -->
+        <img src="beamer_icon.png" alt="Beamer Icon" class="beamer-icon">
+        <!-- Donor List -->
+        <div class="donors">
+            <div class="donor top-donor">
+                <div class="donor-username">1. Dirk R.</div>
+                <div class="donor-amount">€500</div>
+            </div>
+            <div class="donor top-donor">
+                <div class="donor-username">2. Ulrich S.</div>
+                <div class="donor-amount">€300</div>
+            </div>
+            <div class="donor top-donor">
+                <div class="donor-username">3. Wolfgang B.</div>
+                <div class="donor-amount">€200</div>
+            </div>
+            <!-- Additional Donors -->
+            <div class="donor">
+                <div class="donor-username">Anna M.</div>
+                <div class="donor-amount">€150</div>
+            </div>
+            <div class="donor">
+                <div class="donor-username">Max T.</div>
+                <div class="donor-amount">€100</div>
+            </div>
+            <!-- ...more donors -->
         </div>
-        <div class="donor">
-            <div class="donor-username">Ulrich S.</div>
-            <div class="donor-amount">80€</div>
+        <!-- Total Donation and Progress Bar -->
+        <div class="progress-section">
+            <h2 id="totalDonation">Gesamtspenden: €1,250</h2>
+            <div class="progress-bar">
+                <div class="progress" id="progressBar"></div>
+                <div class="goal-markers">
+                    <div class="goal-marker">€2,500</div>
+                    <div class="goal-marker" style="left: 50%;">€3,000</div>
+                    <div class="goal-marker">€3,600</div>
+                </div>
+            </div>
         </div>
-        <div class="donor">
-            <div class="donor-username">Wolfgang B.</div>
-            <div class="donor-amount">20€</div>
-        </div>
-        <div class="total-donation" id="totalDonation">Gesamtspenden: 200€</div>
-        <div class="progress-bar">
-            <div class="progress" id="progressBar"></div>
-            <div class="goal-amount goal-2500">2500€</div>
-            <div class="goal-amount goal-3000">3000€</div>
-            <div class="goal-amount goal-3600">3600€</div>
-        </div>
+        <!-- Beamer Options -->
         <div class="reward-tiers">
             <h2>Beamer-Optionen</h2>
             <div class="reward-tier">
-                <h3>2500€ - Grundmodell</h3>
+                <h3>€2,500 - Grundmodell</h3>
                 <p>Ein solider Beamer für unsere Filmabende.</p>
             </div>
             <div class="reward-tier">
-                <h3>3000€ - Verbesserte Version</h3>
+                <h3>€3,000 - Verbesserte Version</h3>
                 <p>Höhere Auflösung und bessere Farbwiedergabe.</p>
             </div>
             <div class="reward-tier">
-                <h3>3600€ - Profi-Modell</h3>
+                <h3>€3,600 - Profi-Modell</h3>
                 <p>Top-Qualität für das ultimative Kinoerlebnis!</p>
             </div>
         </div>
+        <!-- Donor Benefits -->
+        <div class="donor-benefits">
+            <h2>Vorteile für Spender</h2>
+            <div class="benefit">
+                <h3>Spenden ab €100</h3>
+                <p>Namentliche Erwähnung auf unserer Ehrentafel.</p>
+            </div>
+            <div class="benefit">
+                <h3>Spenden ab €300</h3>
+                <p>Einladung zu einer exklusiven Vorführung.</p>
+            </div>
+            <div class="benefit">
+                <h3>Spenden ab €500</h3>
+                <p>Persönliches Dankeschön und VIP-Status bei Veranstaltungen.</p>
+            </div>
+        </div>
     </div>
-
+    <!-- Scripts -->
     <script>
         // Particle.js configuration
         particlesJS('particles-js', {
             "particles": {
-                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
                 "color": { "value": "#00aaff" },
-                "shape": { "type": "circle", "stroke": { "width": 0, "color": "#000000" } },
-                "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
-                "size": { "value": 3, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false } },
-                "line_linked": { "enable": true, "distance": 150, "color": "#00aaff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 2, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false, "attract": { "enable": true, "rotateX": 600, "rotateY": 1200 } }
+                "shape": {
+                    "type": "circle",
+                    "stroke": { "width": 0, "color": "#000000" },
+                    "polygon": { "nb_sides": 5 }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": { "enable": true, "speed": 2, "size_min": 0.1, "sync": false }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#00aaff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": { "enable": true, "rotateX": 600, "rotateY": 1200 }
+                }
             },
             "interactivity": {
-                "detect_on": "canvas",
                 "events": {
                     "onhover": { "enable": true, "mode": "repulse" },
                     "onclick": { "enable": true, "mode": "push" },
@@ -196,15 +288,10 @@
         // Update progress bar
         window.onload = function() {
             const progressBar = document.getElementById('progressBar');
-            const totalDonation = 200;
+            const totalDonation = 1250;
             const goalAmount = 3600;
             const progress = (totalDonation / goalAmount) * 100;
-            anime({
-                targets: progressBar,
-                width: `${Math.min(progress, 100)}%`,
-                duration: 2000,
-                easing: 'easeInOutQuart'
-            });
+            progressBar.style.width = progress + '%';
         };
     </script>
 </body>
